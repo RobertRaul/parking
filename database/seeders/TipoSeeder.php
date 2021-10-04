@@ -15,6 +15,6 @@ class TipoSeeder extends Seeder
     public function run()
     {
        // \App\Models\Tipo::factory()->count(1000)->create();
-        Tipo::factory(10000)->create();
+        Tipo::factory(1000)->create();
     }
 }

@@ -4,12 +4,15 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Tipo;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class TipoLivew extends Component
 {
     //paginado
     use WithPagination;
+    //subir iamgenes
+    use WithFileUploads;
     //Tipo de paginacion
     protected $paginationTheme = 'bootstrap';
     //acciones
@@ -18,28 +21,28 @@ class TipoLivew extends Component
     public $pagination = 5;
     public $buscar = '';
     //propiedades
-    public $tip_desc, $tip_img;
+    public $tip_desc, $tip_img, $img_antigua;
     // Id y Actualizar
     public $selected_id = null, $selected_id_edit = null;
     public $updateMode = false;
 
     public function render()
     {
-        $data=Tipo::query()
-        ->search($this->buscar)
-        ->orderBy($this->Campo,$this->OrderBy)
-        ->paginate($this->pagination);
+        $data = Tipo::query()
+            ->search($this->buscar)
+            ->orderBy($this->Campo, $this->OrderBy)
+            ->paginate($this->pagination);
 
-        return view('livewire.tipos.listado',[
+        return view('livewire.tipos.listado', [
             'data' => $data
         ]);
     }
 
     protected $rules =
     [
-        'tip_desc'  => 'required|unique:tipo,tip_desc',
+        'tip_desc'  => 'required|unique:tipos,tip_desc',
 
-        'tip_img'   =>  'image',
+        'tip_img'   =>  'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ];
 
     protected $messages =
@@ -54,9 +57,9 @@ class TipoLivew extends Component
     {
         //dentro de este mnetodo se pone todas la validacione en vivo
         $this->validateOnly($propertyName, [
-            'tip_desc'  => 'required|unique:tipo,tip_desc,' . $this->selected_id_edit . ',tip_id',
+            'tip_desc'  => 'required|unique:tipos,tip_desc,' . $this->selected_id_edit . ',tip_id',
 
-            'tip_img'   =>  'image',
+            'tip_img'   =>  'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
     }
 
@@ -83,6 +86,8 @@ class TipoLivew extends Component
         $this->selected_id = null;
         $this->selected_id_edit = null;
 
+        $this->img_antigua = null;
+
         $this->buscar = '';
 
         $this->updateMode = false;
@@ -100,19 +105,39 @@ class TipoLivew extends Component
         $datos =
             [
                 'tip_desc'   => $this->tip_desc,
-                'tip_img'     => $this->tip_img,
             ];
+
+        /*  ------------------------   PARA SUBIR UNA IMAGEN EN LA CARPETA PUBLIC CREAT Images\Tipos   ---------------------------- */
+
+        //Verificamos que la se haya cargado una imagen
+        if (!empty($this->tip_img)) {
+            //si la imagen de ahora es diferente a que se tenia ingresa al if
+            if ($this->tip_img != $this->img_antigua) {
+                $image = $this->tip_img;
+                $nameImg = $this->tip_desc . '-' . substr(uniqid(rand(), true), 8, 8) . '.' . $image->getClientOriginalExtension();
+                $move = Image::make($image)->save('images/tipos/' . $nameImg);
+                $move_tumb = Image::make($image)->resize(150, 100)->save('images/tipos_tumb/' . $nameImg);
+
+                if ($move && $move_tumb) {
+                    $datos = array_merge($datos, ['tip_img' => $nameImg]);
+                }
+            }
+        }
+
         //realizamos validacion para registrar
-        if ($this->selected_id_edit <= 0) {
+        if ($this->selected_id_edit <= 0)
+        {
             $this->validate();
             Tipo::create($datos);
             $this->emit('closeModal');
             $this->emit('msgOK', 'Registro Creado');
-        } else //realizamos la actualizacion
+        }
+        else //realizamos la actualizacion
         {
             $this->validate([
-                'tip_desc'  => 'required|unique:tipo,tip_desc,' . $this->selected_id_edit . ',tip_id',
-                'tip_img'   =>  'image',
+                'tip_desc'  => 'required|unique:tipos,tip_desc,' . $this->selected_id_edit . ',tip_id',
+
+                'tip_img'   =>  'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
             Tipo::find($this->selected_id_edit)->update($datos);
             $this->emit('closeModal');

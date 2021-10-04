@@ -236,8 +236,21 @@ return [
             'url' => 'tipocomprobante',
             'icon' => 'fas fa-fw fa-user',
         ],
+         //Mantenimiento
+         [
+            'text' => 'Series',
+            'url' => 'series',
+            'icon' => 'fas fa-fw fa-user',
+        ],
 
-       
+         //Mantenimiento
+         [
+            'text' => 'Tipos',
+            'url' => 'tipos',
+            'icon' => 'fas fa-fw fa-user',
+        ],
+
+
         [
             'text' => 'blog',
             'url'  => 'admin/blog',

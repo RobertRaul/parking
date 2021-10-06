@@ -18,16 +18,16 @@
 
                 <div class="form-group">
                     <label for="tip_desc">Descripcion</label>
-                    <input wire:model="tip_desc" type="text" class="form-control" id="tip_desc" placeholder="Serie del Comprobante ">
+                    <input wire:model="tip_desc" type="text" class="form-control" id="tip_desc" placeholder="Tipo">
                     @error('tip_desc') <span class="error text-danger">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="form-group">
                     <label for="tip_img">Imagen</label>
-                    <input wire:model="tip_img" type="file" class="form-control" id="tip_img" placeholder="Numero del Comprobante">
+                    <input wire:model="tip_img" type="file" class="form-control" id="tip_img" placeholder="Imagen a Seleccionar">
                     @error('tip_img') <span class="error text-danger">{{ $message }}</span> @enderror
                 </div>
-            
+
             </form>
         </div>
         <div class="modal-footer">

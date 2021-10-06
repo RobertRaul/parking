@@ -177,6 +177,8 @@ return [
 
         // FPDF
         Codedge\Fpdf\FpdfServiceProvider::class, // [1]
+
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -232,6 +234,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         //FPDF
         'Fpdf' => Codedge\Fpdf\Facades\Fpdf::class,
+        //Intervention Image
+        'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 

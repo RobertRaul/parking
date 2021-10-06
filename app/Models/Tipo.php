@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tipo extends Model
 {
+    use HasFactory;
     protected $table ="tipos";
     protected $primaryKey="tip_id";
-    public $timestamps = false;
+    public $timestamps=false;
 
     protected $fillable= ['tip_desc','tip_img','tip_estado'];
 
